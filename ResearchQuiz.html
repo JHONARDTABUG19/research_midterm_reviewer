@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Research Quiz: Lessons 1-8</title>
+<style>
+:root{--bg:#faf7f2;--card:#fff;--ink:#2a2224;--mute:#6f6467;--line:#e4dcd2;--maroon:#7a0000;--gold:#f5c518;--ok:#1f7a45;--okbg:#e6f4ec;--no:#b3261e;--nobg:#fbe9e7}
+@media(prefers-color-scheme:dark){:root{--bg:#1b1617;--card:#251e20;--ink:#f1e9e4;--mute:#a99c9f;--line:#3a2f32;--maroon:#e58c8c;--gold:#f5c518;--ok:#6fd49a;--okbg:#163524;--no:#ff8a80;--nobg:#3d1d1a}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.55 Georgia,'Times New Roman',serif}
+main{max-width:720px;margin:0 auto;padding:24px 18px 60px}
+h1{font-size:1.7rem;margin:0 0 4px;color:var(--maroon)}
+.sub{color:var(--mute);margin:0 0 20px;font-family:system-ui,sans-serif;font-size:.95rem}
+.bar{height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin:10px 0 6px}
+.bar i{display:block;height:100%;background:var(--gold);width:0;transition:width .25s}
+.meta{display:flex;justify-content:space-between;font:.9rem system-ui,sans-serif;color:var(--mute)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:22px;margin-top:14px}
+.q{font-size:1.2rem;margin:0 0 16px}
+button{font:inherit;cursor:pointer}
+.opt{display:block;width:100%;text-align:left;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:12px 14px;margin:8px 0}
+.opt:hover:not(:disabled){border-color:var(--maroon)}
+.opt.ok{background:var(--okbg);border-color:var(--ok)}
+.opt.no{background:var(--nobg);border-color:var(--no)}
+.opt:disabled{cursor:default}
+.exp{margin-top:14px;padding:12px 14px;border-left:4px solid var(--gold);background:var(--bg);font-size:.97rem}
+.primary{background:var(--maroon);color:#fff;border:0;border-radius:8px;padding:11px 22px;margin-top:16px;font-family:system-ui,sans-serif}
+.dark .primary{color:#1b1617}
+@media(prefers-color-scheme:dark){.primary{color:#1b1617}}
+.choices{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+.choices .primary{margin-top:6px}
+.score{font-size:2.6rem;color:var(--maroon);margin:0}
+.rev{margin:10px 0;padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:.95rem}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+</style>
+</head>
+<body>
+<main>
+<h1>Research Quiz: Lessons 1-8</h1>
+<p class="sub">L1 Introduction to Research. L2 Conceptualization and Rationale. L3 Review of Related Literature. L4 Research Design and Methodologies. L5 Data Collection and Sampling. L6 Writing the Research Paper. L7 Ethics in Research. L8 Presenting Research and Defense.</p>
+<div id="app"></div>
+</main>
+<script>
+// [lesson, question, [options], correctIndex, explanation]
+const Q=[
+[1,"The word research comes from the Old French cerchier, meaning:",["To know","To seek or to search","To prove","To study"],1,"Cerchier means to seek or to search."],
+[1,"Research is best defined as:",["Randomly gathering opinions","Copying existing studies","Systematically collecting data using scientific or logical methods to address a specific problem","Writing a report from personal experience"],2,"Research is systematic and uses scientific or logical methods."],
+[1,"IT research is the systematic study of:",["Information systems, software, hardware, networks, and emerging technologies","Only software","Only hardware","Social behavior in communities"],0,"It aims to understand problems, develop solutions, and improve existing technologies."],
+[1,"Which is a purpose of research in the lesson?",["Avoid changing beliefs","Provide reliable evidence for planning, decision-making, implementation, and monitoring","Replace all knowledge","Create opinions without evidence"],1,"Others: solve problems, discover facts, correct misconceptions, contribute to knowledge."],
+[1,"Research that finds solutions to specific problems and addresses practical needs:",["Basic","Historical","Exploratory","Applied"],3,"Example: improving cybersecurity and data protection."],
+[1,"Basic research is also called:",["Fundamental or Pure research","Applied research","Descriptive research","Mixed research"],0,"Fundamental or Pure."],
+[1,"Which best describes basic research?",["Creates a specific product","Expands knowledge of basic concepts, not immediate practical problems","Studies past events","Combines numeric and non-numeric data"],1,"Example: How does cybersecurity protect digital systems?"],
+[1,"A non-experimental design that describes a phenomenon without manipulating variables:",["Descriptive","Experimental","Grounded theory","Applied"],0,"Descriptive research does not manipulate variables."],
+[1,"Descriptive research mainly answers:",["Why and what if","Who and whether","What, where, when, and how","Which and whose"],2,"Through surveys, observations, or case studies."],
+[1,"Observing the lifestyle and social interactions of street vendors is:",["Historical","Quantitative","Applied","Ethnographic"],3,"Ethnographic: qualitative, in people's natural everyday environment."],
+[1,"Exploratory research is conducted when:",["The problem is not yet clearly defined","A theory must be tested statistically","Variables must be manipulated","Past events need analysis"],0,"Usually informal; may rely on secondary sources."],
+[1,"Which type develops a theory from collected data instead of testing one?",["Phenomenological","Grounded theory","Correlational","Basic"],1,"Example: how employees cope with workplace stress."],
+[1,"Studying the history of Philippine education is:",["Ethnographic","Descriptive","Historical","Mixed methods"],2,"Historical research studies past events, people, institutions, and ideas."],
+[1,"Which investigates the lived experience of a phenomenon and its essential meaning?",["Grounded theory","Ethnographic","Phenomenological","Descriptive"],2,"Example: experiences of employees working remotely."],
+[1,"Qualitative research uses:",["Only statistics","Non-numerical data on experiences, opinions, and feelings","Only historical records","Only controlled experiments"],1,"Examples: focus group discussions, open-ended surveys."],
+[1,"Statistical analysis and rating scales are examples of:",["Qualitative","Ethnographic","Exploratory","Quantitative"],3,"Quantitative: numerical data, measurements, statistics."],
+[1,"Combining test scores and student interviews in one study is:",["Mixed methods","Purely quantitative","Purely qualitative","Basic research"],0,"Mixed methods combine quantitative and qualitative data."],
+[1,"The first step in the research process is:",["Data collection","Formulating a hypothesis","Identify the problem","Research design"],2,"Order: problem, literature review, hypothesis, design, population, data collection, analysis, interpretation, writing."],
+[1,"Which step comes right after the literature review?",["Research design","Identifying the population","Data collection","Formulating a hypothesis"],3,"Literature review, then hypothesis, then research design."],
+[1,"Which step comes right after research design?",["Identifying the population","Analyzing the data","Interpretation and conclusion","Writing and presentation"],0,"Then data collection."],
+[1,"Which importance of IT research encourages new ideas, methods, and technologies?",["Problem-Solving","Innovation","Continuous Improvement","Future Development"],1,"Innovation."],
+[1,"Provides data and insights that support better planning and decision-making:",["Data-Driven Decision Making","Innovation","Problem-Solving","Future Development"],0,"Problem-Solving helps organizations overcome specific challenges."],
+[1,"Identifying weaknesses in existing systems and making them more effective and efficient:",["Innovation","Future Development","Continuous Improvement","Problem-Solving"],2,"Future Development guides future IT technologies."],
+[1,"In 'Knowing Is Only the Beginning,' the cybersecurity problem is:",["People never learn the risks","Tools are too expensive","Knowing the risks does not always lead to safer online behavior","Too many choices make decisions harder"],2,"Explore habits, convenience, trust, perceived risk, and motivation."],
+[2,"A research topic is:",["A testable prediction","A broad subject area of interest you want to investigate","A list of technical terms","A summary of the research"],1,"It is later narrowed into a niche."],
+[2,"Which is NOT part of the PUP Standard?",["SDG Inclined","IT Related","Developmental Output","Commercial Profitability"],3,"PUP Standard: SDG Inclined, IT Related, Developmental Output."],
+[2,"The topic must relate to at least how many SDGs?",["1","3","5","All 17"],0,"At least 1."],
+[2,"Which is a developmental output?",["A literature summary","A questionnaire only","An opinion essay","A trained model, working prototype, or network traffic simulation"],3,"The study must produce an output based on development."],
+[2,"How many SDGs are there, and which is SDG 9?",["17; Industry, Innovation and Infrastructure","15; Life on Land","17; Quality Education","16; Climate Action"],0,"SDG 4 is Quality Education; SDG 13 is Climate Action."],
+[2,"Which SDG numbers are Climate Action and Partnerships for the Goals?",["12 and 16","13 and 17","14 and 17","13 and 16"],1,"13 = Climate Action; 17 = Partnerships for the Goals."],
+[2,"Topic Selection Step 1 is:",["Seek feedback and finalize","Formulate descriptive questions","Conduct preliminary research","Identify your area of interest"],3,"Steps: interest, preliminary research, narrow focus, descriptive questions, feasibility/relevance/impact, feedback."],
+[2,"To find research gaps, look at:",["Future Research sections of papers","Reference lists only","Titles only","Social media posts"],0,"Step 2 also includes reviewing literature and analyzing trends."],
+[2,"Which narrows a broad interest into a niche?",["Artificial Intelligence","Technology","AI in Healthcare Diagnostics","Computers"],2,"Also: Ethical Implications of AI in Social Media."],
+[2,"Descriptive research questions should start with:",["Is, Are, or Does","Who, Whom, or Whose","When, Where, or Which","How, What, or Why"],3,"They describe, classify, or compare characteristics or processes."],
+[2,"Feasibility (Step 5) means assessing:",["Available data, access to experts, tools, and timeline","Only topic popularity","Only number of SDGs","Only title length"],0,"Practical impact: practical applications, current IT issues, helps society."],
+[2,"In Step 6, you should consult:",["No one","Only classmates","Only family","Professors, industry experts, and classmates"],3,"Then finalize a clear title and brief proposal."],
+[2,"In concept mapping, the broad topic goes:",["At the bottom","Top-left corner","In the center","At the end of branches"],2,"Then branch to subtopics, then to specific variables or problems."],
+[2,"A good title contains:",["As many keywords as possible","The fewest possible words that adequately describe the contents and purpose","A full question","Only jargon"],1,"It summarizes the main idea of the study."],
+[2,"Recommended title length:",["1-3 words","4-6 words","7-15 words","20-30 words"],2,"Steps 1 and 2: keep it brief."],
+[2,"Filler phrases to remove from titles:",["Comparative Analysis of","among University Students","Network Security Protocols","A Study of; An Investigation into"],3,"Include the main variables, concepts, or focus instead."],
+[2,"'among University Students' in a title illustrates:",["Including the scope","Avoiding jargon","Title case","Avoiding question format"],0,"Steps 3 and 4: include scope, use clear language."],
+[2,"'A Descriptive Study of...' follows which guideline?",["Capture attention","Reflect the type of study","Revise multiple times","Tailor to audience"],1,"Steps 5-7: engaging, reflect study type, avoid questions."],
+[2,"Titles should generally be:",["Declarative statements","Questions","All lowercase","As long as possible"],0,"Unless a question format is necessary."],
+[2,"Steps 8, 9, and 10 of title formulation:",["Scope, jargon, brevity","Grammar (title case), audience, revision","Engagement, methodology, questions","Specificity, focus, key elements"],1,"Revisit the title and get feedback from advisors or mentors."],
+[2,"A well-structured title per the lesson:",["The Impact of AI","AI vs. Humans","A Comparative Analysis of Network Security Protocols in Wireless Communication","A Study of Technology"],2,"The others are vague or poor examples."],
+[2,"Theoretical frameworks cited in the lesson:",["IMRAD, SDG, PUP","TAM, UTAUT, Diffusion of Innovation","IoT, ML, AI","H0, H1, H2"],1,"The theoretical framework is the 'map' guiding your research."],
+[2,"The conceptual framework is:",["A list of defined terms","The map based on an established theory","A visual diagram of the relationship between your variables","A summary of findings"],2,"Frameworks ground the study and give a rationale for hypotheses."],
+[2,"A research problem is:",["A specific issue, difficulty, or gap in knowledge","Any topic of interest","A prediction about variables","The study title"],0,"Define it specifically."],
+[2,"If multiple research questions are stated, they must be:",["Independent","Numerous but unrelated","Yes/no questions","Inter-related and leading, all answering the ultimate issue"],3,"All questions answer the study's ultimate concern."],
+[2,"The 'So What?' Test asks:",["Will it finish on time?","Why does this matter? If not convincing, the topic isn't ready","Who funded it?","How many respondents?"],1,"It tests the significance of the problem."],
+[2,"The better (specific) problem statement:",["Students are using Excel for Data Analysis","Excel is popular","Data analysis is important","Students' reliance on manual processing in Excel results in a 15% error rate, causing project delays"],3,"The first is the vague 'poor' example."],
+[2,"The Alternative Hypothesis (H1) is:",["A statement of no relationship","A definition of terms","A limitation","A testable prediction about the relationship between variables"],3,"Example: significant relationship between internet bandwidth and video conferencing quality."],
+[2,"The Null Hypothesis (H0) states:",["There is no relationship; research gathers evidence to reject it","There is a significant relationship","There are no limitations","The sample size is zero"],0,"We aim to reject the null."],
+[2,"The significance of the study answers:",["What is the sample size?","Who will benefit from the results?","What are the weaknesses?","What terms are used?"],1,"Practitioners, students/end-users, institutions/organizations, future researchers."],
+[2,"Which group serves as a foundation for further research?",["IT Practitioners/Developers","Students/End-Users","Future Researchers","Educational Institutions"],2,"Future Researchers."],
+[2,"The scope of a study is:",["Out-of-control constraints","The coverage or boundaries: time frame, location, population, specific tech","The list of beneficiaries","The expected findings"],1,"E.g., AY 2025-2026, University X, 3rd-year IT students."],
+[2,"'Python-based Machine Learning' is which scope element?",["Population","Location","Time frame","Specific tech"],3,"Scope: time frame, location, population, specific tech."],
+[2,"Limitations are factors that:",["Constrain the study and are out of your control","You deliberately include","Benefit readers","Define hypotheses"],0,"Scope is chosen; limitations are not."],
+[2,"'Reliance on self-reported data' is which limitation category?",["Sample size","Methodology","Technology","Time"],1,"Others: small respondent number, compatibility limits, insufficient time for long-term effects."],
+[2,"The definition of terms is important because it:",["Replaces the abstract","Predicts results","Ensures clarity and avoids confusion about terminology","Lists beneficiaries"],2,"E.g., IoT, Machine Learning, Phishing."],
+[2,"IMRAD stands for:",["Idea, Model, Results, Analysis, Data","Introduction, Methods, Results, And Discussion","Introduction, Materials, Research, Abstract, Data","Issue, Method, Review, Analysis, Decision"],1,"Add 3-5 keywords for indexing."],
+[2,"In the abstract example, how many students and which approach?",["50; qualitative","100; mixed methods","100; quantitative","200; quantitative"],2,"A survey of 100 IT students at University X, quantitative."],
+[3,"The Review of Related Literature (RRL) is best described as:",["A list of source summaries","A critical, analytical synthesis that organizes, evaluates, and identifies gaps in existing research","A copy of related studies","Only a list of references"],1,"It is not just a list of summaries."],
+[3,"Which question does an RRL answer?",["What will my budget be?","What are the prevailing theories, controversies, and contradictions?","Which programming language is fastest?","How many respondents are needed?"],1,"Also: what we know, key researchers, method strengths/weaknesses, and the research gap."],
+[3,"Which RRL purpose shows how your study fits the broader academic conversation?",["Contextualization","Avoiding Duplication","Methodology Insight","Establishing Credibility"],0,"It shows you are not reinventing the wheel."],
+[3,"Which purpose justifies your study by pointing out what is missing, flawed, or outdated?",["Theoretical Framework","Justification (The Research Gap)","Contextualization","Establishing Credibility"],1,"It creates the rationale for your project."],
+[3,"Which purpose introduces key theories and helps define core concepts (operational definitions)?",["Methodology Insight","Justification","Theoretical Framework","Avoiding Duplication"],2,"It guides your analysis."],
+[3,"Which purpose reveals which research methods were used before and which succeeded?",["Methodology Insight","Contextualization","Establishing Credibility","Avoiding Duplication"],0,"It helps you design a stronger methodology."],
+[3,"Demonstrating your ability to analyze, synthesize, and critique is:",["Avoiding Duplication","Contextualization","Establishing Credibility","Methodology Insight"],2,"Avoiding Duplication means not repeating a conclusively done study."],
+[3,"Which database is best for interdisciplinary searches and tracking citation trends?",["IEEE Xplore","ACM Digital Library","Mendeley","Google Scholar"],3,"Click 'Cited by' to find newer papers."],
+[3,"IEEE Xplore is best for:",["Software, AI, HCI, Data Science","Humanities","Hardware, Electronics, Robotics, Applied Physics","Interdisciplinary searches"],2,"Filter by Journals and recent Conference Proceedings."],
+[3,"ACM Digital Library is best for:",["Software, AI, Human-Computer Interaction, Data Science","Hardware and Robotics","Applied Physics","General web pages"],0,"Look for the 'Free Access' button."],
+[3,"Which Boolean operator narrows a search?",["OR","NOT","AND","Quotation marks"],2,"OR broadens (Teenager OR Adolescent OR Youth); NOT excludes."],
+[3,"Quotation marks around a phrase search for:",["Synonyms","Exact phrases","Newest papers","Free papers"],1,"E.g., 'Artificial Neural Networks'."],
+[3,"Recommended search filters:",["Last 5-10 years; peer-reviewed journals and conferences","Last 50 years; blogs","Any year; any source","Only preprints"],0,"Publication year and document type."],
+[3,"In CRAAP, which element asks who wrote it and whether they are from a reputable institution?",["Currency","Relevance","Authority","Purpose"],2,"Authority."],
+[3,"CRAAP: 'Is the methodology sound? Are conclusions backed by data? Is it peer-reviewed?' is:",["Accuracy","Authority","Purpose","Relevance"],0,"Purpose asks if it is objective or biased/sponsored."],
+[3,"Per the lesson on currency:",["Papers older than 2 years are always outdated","AI papers from 2018 are outdated; history papers from 1990 may still be valid","Currency does not matter","Only 1990 papers count"],1,"Currency depends on the field."],
+[3,"Which is NOT a listed reason to use a citation manager?",["Organize PDFs, notes, metadata","Cloud synchronization","Automatically writing your findings","Cite-while-you-write and collaboration"],2,"Listed: organize, synchronize, cite-while-you-write, collaborate."],
+[3,"Which manager is free, open-source, with a one-click browser extension, best for humanities and social sciences?",["Mendeley","Zotero","EndNote","Google Scholar"],1,"Zotero, the Web-Integrator."],
+[3,"Which manager has a built-in annotating PDF viewer and 2GB free storage, best for sciences and engineering?",["Mendeley","Zotero","Word","Scholar"],0,"Mendeley, the Social Network."],
+[3,"The PUP Standard RRL structure is:",["Introduction and Conclusion","Body (thematically arranged) and Synthesis (findings and research gap)","Abstract and Methods","Chronology and Method"],1,"State the research gap explicitly in the synthesis."],
+[3,"Grouping sources by themes, ideas, or variables is the ___ approach (most common):",["Chronological","Methodological","Thematic","Alphabetical"],2,"E.g., social media and mental health: positive, negative, mediating factors."],
+[3,"Organizing sources by publication date or historical development:",["Thematic","Chronological","Methodological","Random"],1,"Don't just list; analyze how thinking changed."],
+[3,"Grouping studies by the research methods used:",["Methodological","Thematic","Chronological","Cluster"],0,"Use when critiquing the how or when methodology is debated."],
+[3,"Which is synthesis rather than summary?",["Smith said X. Jones said Y.","While Smith argues X, Jones contradicts with Y; Brown bridges the gap with Z","A list of titles","Copied abstracts"],1,"The literature is a dialogue; you are the moderator."],
+[3,"Which is NOT a critical analysis question in the lesson?",["Strengths","Weaknesses","Contradictions","Author's popularity"],3,"Strengths, weaknesses, contradictions, gaps."],
+[3,"Changing a few words but keeping the original sentence structure is:",["Direct copy-paste","Mosaic (patchwork) plagiarism","Self-plagiarism","Acceptable paraphrasing"],1,"Direct copy-paste lifts text verbatim without quotes."],
+[3,"Re-using your own previous paper without citing it is:",["Mosaic plagiarism","Insufficient paraphrasing","Self-plagiarism","Acceptable"],2,"You cannot simply copy-paste an earlier term paper."],
+[3,"Which is acceptable use of a source?",["Using the exact sentence without quotes","Paraphrasing and citing, or quoting directly with a citation","Rewording without credit","Reusing your old paper uncited"],1,"If the idea is not your own, cite it even if reworded."],
+[3,"Which style is the PUP Standard, with in-text citations like (Smith, 2020)?",["IEEE","MLA","APA 7th Edition","Chicago"],2,"IEEE uses [1] (engineering/CS hardware); MLA uses (Smith 15) (humanities)."],
+[4,"The three pillars of research design are:",["Descriptive, Developmental, Design Science","Quantitative, Qualitative, and Mixed-Methods","Basic, Applied, Historical","Survey, Interview, Experiment"],1,"Numerical vs textual/narrative vs integration of both."],
+[4,"Philosophical underpinnings of quantitative, qualitative, mixed-methods:",["Pragmatism, Positivism, Interpretivism","Positivism, Interpretivism, Pragmatism","Interpretivism, Pragmatism, Positivism","Positivism, Pragmatism, Interpretivism"],1,"Positivism (Quant), Interpretivism (Qual), Pragmatism (Mixed)."],
+[4,"Characteristics of quantitative research:",["Inductive logic, small samples","Deductive logic, objective measurement, statistical analysis, large samples, structured instruments","Subjective interpretation, interviews","Iterative design cycles"],1,"Instruments: surveys, experiments."],
+[4,"Strengths of quantitative research:",["Rich context","Generalizability, reliability, ability to test hypotheses","Captures why and how","Flexible and inductive"],1,"Strengths differ from qualitative ones."],
+[4,"Weaknesses of quantitative research:",["Researcher bias","Lack of context, rigid structure, inability to capture deep nuance","Difficult to generalize","Time-consuming"],1,"Researcher bias and time are qualitative weaknesses."],
+[4,"Characteristics of qualitative research:",["Deductive logic, large samples","Inductive logic, subjective interpretation, small samples, in-depth exploration","Statistical analysis","Structured surveys"],1,"Interviews, focus groups, observations."],
+[4,"Strengths of qualitative research:",["Generalizability","Rich context, captures complexity, explores why and how","Reliability","Hypothesis testing"],1,"Qualitative explores why and how."],
+[4,"Weaknesses of qualitative research:",["Lack of context","Difficult to generalize, researcher bias, time-consuming","Rigid structure","Needs large samples"],1,"Contrast with quantitative weaknesses."],
+[4,"Mixed-methods research is:",["Only surveys","Combining quantitative and qualitative approaches in a single study","Only experiments","Only case studies"],1,"It offsets weaknesses of single-method studies."],
+[4,"Collecting both types of data simultaneously:",["Convergent Parallel","Explanatory Sequential","Exploratory Sequential","Descriptive"],0,"Convergent Parallel."],
+[4,"Quant first, then Qual to explain results:",["Convergent Parallel","Exploratory Sequential","Explanatory Sequential","Developmental"],2,"Explanatory Sequential."],
+[4,"Qual first, then Quant to test findings:",["Explanatory Sequential","Exploratory Sequential","Convergent Parallel","Design Science"],1,"Exploratory Sequential."],
+[4,"Core question of descriptive research:",["How can we build and refine this tool?","What are the current characteristics or status of this phenomenon?","What new artifact solves this problem?","Why did it happen historically?"],1,"Goal: observation and documentation."],
+[4,"Descriptive research is status-quo/passive because it:",["Builds a new product","Observes, maps, and analyzes without intervening","Manipulates development","Invents an artifact"],1,"Data: surveys, interviews, naturalistic observation, document analysis."],
+[4,"Core question of developmental research:",["What are the current characteristics?","How can we build and refine this specific product/tool?","What new artifact can solve this problem?","Who are the respondents?"],1,"Goal: creation and evaluation."],
+[4,"Typical data collection in developmental research:",["Surveys only","Prototyping, formative evaluation, expert reviews, usability testing","Historical records","Naturalistic observation only"],1,"It manipulates the development process and measures product utility."],
+[4,"Core question of design science research:",["What are the current characteristics?","How can we refine this tool?","What new artifact can solve this practical problem effectively?","Why do users behave this way?"],2,"Primary goal: prescriptive knowledge."],
+[4,"Design science introduces:",["Existing variables in a natural state","A brand-new artificial artifact (software, framework, method)","Only survey data","A historical record"],1,"Data: iterative design cycles, simulations, technical evaluations, case studies."],
+[4,"Choose descriptive research when:",["You need to understand a problem before solving it","You must build an instructional tool","You must invent an algorithm","You test a prototype"],0,"E.g., current digital literacy among teachers in a region."],
+[4,"Choose developmental research when:",["You are in education/training and need to build a new instructional program or learning tool, document how, and prove it works","You invent a new software architecture","You only observe","You test a theory"],0,"Education or training context."],
+[4,"Choose design science research when:",["You observe a population","You are in information systems/engineering and need to invent a new architecture, framework, or algorithm for an organizational pain point","You build a lesson plan","You review literature"],1,"Information systems or engineering context."],
+[4,"A key takeaway of Lesson 4:",["Quantitative is always best","No single method is best; the method must fit the research question","Mixed-methods is always easy","Qualitative is invalid"],1,"Match design to the question."],
+[4,"IT students most often use:",["Only quantitative surveys","Mixed-methods with descriptive-developmental or descriptive-design science","Only historical research","Only ethnography"],1,"Mixed-methods is powerful but needs expertise in both data types."],
+[5,"Surveys use structured questionnaires with:",["Open-ended questions only","Closed-ended questions (e.g., Likert scales) to collect numerical data from a large sample","One-on-one conversations","Observation notes"],1,"Key focus: avoid bias, ensure clarity, pilot test."],
+[5,"Avoiding bias, ensuring clarity, and pilot testing relate to:",["Questionnaire design","Focus groups","Snowball sampling","Case studies"],0,"Key focus of surveys."],
+[5,"Manipulating independent variables to measure the effect on a dependent variable in a controlled environment:",["Experiments","Surveys","Interviews","Case studies"],0,"Example: A/B testing a UI feature on click-through rate."],
+[5,"Interview types are:",["Structured, Semi-structured, Unstructured","Simple, Stratified, Cluster","Open, Closed, Mixed","Online, Offline, Hybrid"],0,"One-on-one, in-depth conversations."],
+[5,"A guided discussion among a small group to explore shared perceptions:",["Focus group","Survey","Experiment","Document analysis"],0,"Focus groups also generate ideas."],
+[5,"Systematically watching and recording user behavior, e.g., usability testing:",["Interview","Observation","Survey","Quota sampling"],1,"Observation."],
+[5,"Analyzing system logs, code repositories, user manuals, and bug reports is:",["Document/Artifact Analysis","Focus group","Survey","Observation"],0,"Gathers historical or process-related data."],
+[5,"An in-depth, multi-faceted investigation of a single person, group, or event:",["Survey","Case study","Experiment","Quota sampling"],1,"Often uses multiple data collection methods."],
+[5,"The target population is:",["The 150 students who participate","The entire group the research question is about","The sample","Only volunteers"],1,"E.g., all registered LMS users."],
+[5,"Respondents (the sample) are:",["The entire population","Individuals from the target population who actually participate","Researchers","Experts only"],1,"E.g., 150 undergraduate LMS users."],
+[5,"Probability sampling means:",["Every member has a known, non-zero chance of selection, allowing generalization","Selection by convenience","Selection by judgment","Participants recruit others"],0,"Random selection."],
+[5,"Randomly picking names from a hat or using a random number generator:",["Stratified random","Simple random","Cluster","Systematic"],1,"Simple random."],
+[5,"Dividing the population into subgroups (e.g., year level) and randomly sampling each:",["Cluster","Systematic","Stratified random","Quota"],2,"Stratified random."],
+[5,"Randomly selecting entire groups (e.g., 5 of 50 computer labs) and surveying all users:",["Cluster sampling","Stratified","Convenience","Snowball"],0,"Cluster."],
+[5,"Selecting every nth member from a list (e.g., every 10th user):",["Systematic sampling","Simple random","Quota","Purposive"],0,"Systematic."],
+[5,"Non-probability sampling is based on:",["Random selection","Convenience, judgment, or other non-random criteria; generalization is limited","Known chances for all","Statistical formulas only"],1,"Common in qualitative research."],
+[5,"Surveying students in the library because they are easy to reach:",["Purposive","Convenience","Quota","Snowball"],1,"Convenience."],
+[5,"Hand-picking participants who meet specific criteria (e.g., senior software engineers):",["Convenience","Snowball","Purposive (Judgmental)","Cluster"],2,"Purposive."],
+[5,"Existing participants recruit others; useful for hard-to-reach populations:",["Snowball","Quota","Stratified","Systematic"],0,"Snowball."],
+[5,"Target numbers per subgroup with non-random selection (e.g., 50 male, 50 female):",["Stratified random","Quota","Purposive","Cluster"],1,"Quota is non-random; stratified is random."],
+[5,"A 'how many' question calls for ___; a 'why/how' question calls for ___:",["Qualitative; quantitative","Quantitative; qualitative","Mixed; descriptive","Experiment; survey"],1,"Match technique to the question."],
+[5,"In the mobile app scenario, 20 students (10 users, 10 non-users) were chosen via:",["Simple random","Purposive sampling","Snowball","Cluster"],1,"Plan: 3 focus groups, transcription, thematic analysis."],
+[5,"Which trade-off is correct?",["Probability sampling is cheap but biased","Surveys reach many but lack depth; interviews and focus groups offer depth but are time-consuming","Non-probability sampling is rigorous and costly","Interviews reach thousands"],1,"Probability: rigorous but costly; non-probability: practical but biased."],
+[5,"A data collection plan states:",["Only the title","Technique, population, sample, sampling method, and step-by-step procedure","Only the budget","Only the results"],1,"It ensures your data answers the research question."],
+[6,"In this lesson, a Gantt chart is used to:",["Collect survey data","Develop a research schedule","Compute statistics","Cite sources"],1,"Learning outcome: develop a research schedule using a Gantt chart."],
+[6,"The sample Research Development Gantt Chart (Chapters 1-5 and Finalization) spans:",["10 weeks","15 weeks","20 weeks","30 weeks"],2,"W1 to W20."],
+[6,"Each chapter follows which sequence?",["Review, drafting, submission","Drafting, review, revision (and final approval where applicable)","Revision, drafting, approval","Approval, drafting, review"],1,"This applies to each chapter."],
+[6,"In the chart, Chapters 1-3 are the ___ stage and Chapters 4-5 are the ___ stage:",["Proposal; post-data-collection","Post-data-collection; proposal","Final; draft","Pilot; final"],0,"Proposal stage = Chapters 1-3."],
+[6,"By the end of Week 12, which should be developed enough to proceed to data collection?",["Chapters 1-5","Chapters 1-3 and the research instrument","Only Chapter 1","The final manuscript"],1,"Instrument validated W11-W12."],
+[6,"Weeks 13-18 focus on:",["Literature review","Data, Chapters 4-5, and integration","Topic selection","Final corrections only"],1,"Weeks 19-20 are reserved for final corrections and submission."],
+[6,"Which chapter has the longest scheduled duration (5 weeks)?",["Chapter 1","Chapter 2 (Review of Literature)","Chapter 3","Chapter 4"],1,"Thematic RRL 4 weeks, synthesis/gap 2 weeks, review 1 week."],
+[6,"Chapter 1 drafting (problem, objectives, scope, significance) takes:",["1 week","2 weeks","4 weeks","5 weeks"],1,"Chapter 1 is 3 weeks: drafting, adviser review, final refinement."],
+[6,"Chapter 3 (Methodology, 4 weeks) covers:",["Research design, respondents, instruments, procedures, then validation and revision","Results and discussion","Summary and recommendations","Proofreading"],0,"Design, respondents, instruments, procedures: 3 weeks; validation: 1 week."],
+[6,"Pilot testing / final preparation belongs to:",["Chapter 2","Research Instrument / Data Collection Preparation","Chapter 5","Finalization"],1,"Instrument development and validation: 2 weeks; pilot testing: 1 week."],
+[6,"The Data Collection and Analysis activity (3 weeks) includes:",["Gathering, cleaning, coding, and analysis","Proofreading and signatures","Drafting the abstract","Citing sources"],0,"Data collection completed W13-W15."],
+[6,"Chapter 4 is titled:",["Introduction","Review of Literature","Methodology","Results and Discussion"],3,"Presentation, analysis, interpretation, discussion (3 weeks) plus review (1 week)."],
+[6,"Chapter 5 is titled:",["Summary, Conclusions and Recommendations","Results and Discussion","Introduction","Methodology"],0,"Summary, conclusions, recommendations: 2 weeks, plus 1 week review."],
+[6,"Full Manuscript Integration (2 weeks) involves:",["Collecting data","Integrating Chapters 1-5 and checking consistency","Pilot testing","Sampling"],1,"Milestone: W18-W19."],
+[6,"Finalization and Submission (Week 20) includes:",["Proofreading, formatting, signatures, submission","Data gathering","Drafting Chapter 1","Instrument validation"],0,"One week."],
+[6,"Which milestone is scheduled for W13-W15?",["Chapter 1 draft","Research instrument validated","Data collection completed","Chapter 5 draft"],2,"Instrument validated W11-W12; Chapter 4 draft W15-W17; Chapter 5 draft W17-W18."],
+[6,"The Lesson 6 topic outline consists of:",["Gantt Chart; Thesis and Dissertation Manual; Preliminaries, Chapters 1-5, and Appendices","Ethics; Sampling; Defense","Topic selection; Titles; Frameworks","RRL; Citation; Plagiarism"],0,"The manual and chapter sections are demo slides with no further text."],
+[7,"Which is NOT a listed reason for ethics in research?",["Protects participants","Ensures integrity","Guarantees the study will be published","Upholds public trust"],2,"Also: guides professional conduct and prevents legal repercussions."],
+[7,"The three pillars from the Belmont Report:",["Autonomy, Beneficence, Justice","Validity, Reliability, Objectivity","Privacy, Security, Anonymity","Consent, Debrief, Release"],0,"They form the basis for research with human subjects."],
+[7,"Respect for Persons is also known as:",["Beneficence","Justice","Autonomy","Non-maleficence"],2,"Individuals are autonomous agents capable of their own decisions."],
+[7,"Key requirements of Respect for Persons:",["Voluntariness, informed consent, protection of vulnerable populations","Risk-benefit analysis","Fair recruitment","Encryption"],0,"Extra care for children, prisoners, cognitively impaired individuals."],
+[7,"Voluntariness means participation is:",["Paid","Free of coercion or undue influence","Anonymous","Mandatory"],1,"Voluntariness."],
+[7,"Non-maleficence means ___; beneficence means ___:",["Do good; do no harm","Do no harm; do good (maximize benefits, minimize harms)","Be fair; be honest","Be private; be secure"],1,"Two complementary rules of Principle 2."],
+[7,"Beneficence requires:",["A thorough risk-benefit analysis, with benefits outweighing risks","Equal sample sizes","A signed form only","Anonymous data"],0,"Benefits to participant or society must outweigh risks."],
+[7,"Justice is:",["An obligation to act for others' benefit","Fair and equitable distribution of the burdens and benefits of research","Free choice of participants","Protection of data"],1,"Justice."],
+[7,"Under Justice, fair recruitment means:",["Targeting only convenient populations","Not targeting only vulnerable or convenient populations for risky research","Recruiting only experts","Offering large incentives"],1,"Also: equitable selection and fair treatment."],
+[7,"Informed consent is best described as:",["A signature","A process allowing a participant to voluntarily confirm willingness after being informed of all aspects","A data policy","A legal waiver"],1,"The process matters more than the signature."],
+[7,"Core components of informed consent:",["Information, Comprehension, Voluntariness, Competence, Documentation","Fairness, Benefit, Harm, Risk","Encryption, Anonymity, Access","Cite, Quote, Paraphrase"],0,"Five components."],
+[7,"The Information component of consent includes:",["Purpose, procedures, risks, benefits, alternatives","Only the benefits","Only the risks","Only the title"],0,"Comprehension ensures the participant understands it."],
+[7,"Regarding consent documentation:",["A signed form is all that matters","Usually a signed form, but the process is more important than the signature","Documentation is optional","It replaces comprehension"],1,"Documentation."],
+[7,"Privacy is:",["How a researcher manages collected information","A person's right to control access to themselves and their personal information","Technical data protection","Not linking data to a person"],1,"It's about who has access."],
+[7,"Confidentiality is:",["A person's right to control access","How a researcher manages private information; a promise about how data will be handled","Encryption","Anonymity"],1,"Confidentiality."],
+[7,"Data security examples include:",["Encryption, password protection, secure servers, access controls","Consent forms","Citations","Peer review"],0,"Protects against unauthorized access, alteration, or destruction."],
+[7,"Anonymity means:",["The researcher can link data to a person but won't disclose it","The researcher cannot link the data to any specific participant","Data is encrypted","Participants are paid"],1,"True anonymity is difficult to guarantee."],
+[7,"Confidentiality, unlike anonymity, means:",["Data cannot be linked to anyone","The researcher can link data to a person but promises not to disclose it","Data is public","No data is collected"],1,"Differs from anonymity."],
+[7,"Intellectual property refers to:",["Only patents","Creations of the mind: inventions, works, designs, symbols, names, images used in commerce","Only copyright","Only trade secrets"],1,"Your own research, thesis, and papers are your IP."],
+[7,"IP types relevant to research:",["Copyright, Patents, Trade Secrets, and Your IP","Privacy, Consent, Justice, Autonomy","Direct, Mosaic, Self, Idea","Fairness, Transparency, Privacy, Accountability"],0,"Copyright: original works; patents: inventions/processes; trade secrets: confidential business info."],
+[7,"Presenting another's words, ideas, or work as your own without attribution is:",["Plagiarism","Beneficence","Paraphrasing","Anonymity"],0,"Plagiarism."],
+[7,"Presenting someone else's unique idea or theory as your own:",["Direct plagiarism","Mosaic plagiarism","Self-plagiarism","Idea plagiarism"],3,"Direct = verbatim; mosaic = few words changed; self = reusing own work uncited."],
+[7,"The Fix for plagiarism per the lesson:",["Paraphrase everything","When in doubt, cite it","Avoid sources","Use AI"],1,"Cite when in doubt."],
+[7,"Algorithmic bias (e.g., hiring algorithms, facial recognition) is linked to which principle?",["Autonomy","Beneficence","Justice","Respect"],2,"Bias and Fairness (Justice)."],
+[7,"'Black box' models that make decisions hard to understand raise concerns of:",["Transparency and Explainability (Autonomy)","Data Ownership","Accountability (Beneficence)","Fair recruitment"],0,"It impacts a person's ability to challenge decisions."],
+[7,"'How do we get meaningful consent when data is scraped from the web?' concerns:",["Privacy and Consent (Autonomy)","Bias and Fairness","Accountability","Data ownership"],0,"Privacy and Consent."],
+[7,"'Who is responsible when an AI system causes harm?' concerns:",["Accountability (Beneficence)","Bias","Transparency","Consent"],0,"Developer, user, or data provider."],
+[7,"When evaluating an AI/DS project, ask about:",["Fairness, Transparency, Privacy, Accountability, Beneficence","Speed, Cost, Color, Size","Only legality","Only accuracy"],0,"Privacy includes laws like GDPR."],
+[7,"The key takeaway of Lesson 7:",["Ethics is merely compliance with rules","Ethical research is a proactive, principled commitment to respecting persons, minimizing harm, ensuring fairness, and maintaining integrity","AI removes the need for ethics","Consent forms suffice"],1,"Ethics is a proactive, lifelong commitment."],
+[8,"Clarity in oral communication means:",["Using jargon","Avoiding jargon, defining technical terms, speaking clearly at a measured pace","Speaking quickly","Reading slides aloud"],1,"Clarity."],
+[8,"For engagement, you should:",["Avoid eye contact","Maintain eye contact and vary tone and pitch","Speak in a monotone","Read notes only"],1,"Avoid monotony."],
+[8,"To build confidence:",["Use filler words","Practice, and use pauses instead of filler words (um, ah)","Memorize every word","Avoid rehearsal"],1,"Practice reduces anxiety."],
+[8,"Timing means:",["Going over time if needed","Adhering strictly to time limits and rehearsing with a timer","Skipping results","Speaking fast"],1,"Timing."],
+[8,"The Simplicity principle for visuals:",["One idea per slide; avoid 'Death by PowerPoint' (walls of text)","Many ideas per slide","Dense paragraphs","Only text"],0,"Simplicity."],
+[8,"Visual hierarchy calls for:",["Low-contrast colors, decorative fonts","High-contrast colors, readable (sans-serif) fonts, relevant charts and graphs","Small text","Many animations"],1,"Visual hierarchy."],
+[8,"Consistency means:",["A different design per slide","Uniform design templates throughout the deck","Random fonts","Many colors"],1,"Consistency."],
+[8,"Data visualization: graphs show ___, tables show ___:",["Specific data points; trends","Trends; specific data points","Concepts; trends","Images; tables"],1,"Images illustrate concepts."],
+[8,"The narrative arc in order:",["Method, Problem, Meaning, Evidence","Problem, Method, Evidence, Meaning","Evidence, Method, Problem, Meaning","Meaning, Evidence, Method, Problem"],1,"Gap, methodology, results, discussion/conclusion."],
+[8,"In the narrative arc, 'The Evidence' corresponds to:",["Introduction","Methodology","Results","Discussion/Conclusion"],2,"What did we find?"],
+[8,"The Opening of the defense includes:",["Title and Introduction, Problem Statement, Significance, Roadmap","Results, Discussion","Limitations only","Recommendations"],0,"Steps 1-4."],
+[8,"The roadmap is:",["A brief outline of the presentation structure for the audience","A map of the research site","A Gantt chart","A list of references"],0,"Roadmap."],
+[8,"In the defense, the methodology should:",["Be long and detailed","Be concise, focusing on why you chose the methods, not just what you did","Be skipped","Only list tools"],1,"Step 5."],
+[8,"Results are:",["Presented hypothesis by hypothesis; the heart of the presentation","An appendix","Optional","Hidden"],0,"Use visuals to highlight key data."],
+[8,"The Conclusion part includes:",["Discussion, Implications, Limitations, Recommendations","Title, Roadmap","Methodology","Opening"],0,"Steps 7-10."],
+[8,"Limitations should be:",["Hidden","Acknowledged honestly as boundaries","Exaggerated","Ignored"],1,"Step 9."],
+[8,"How many potential questions should you brainstorm?",["5-10","20-30","50-100","None"],1,"Anticipate panel questions."],
+[8,"'Why did you use this sample size?' is a ___ question:",["Literature","Methodology","Application","Results"],1,"Methodology."],
+[8,"'How does this contradict [Author Name]?' is a ___ question:",["Literature","Methodology","Technical","Application"],0,"Literature."],
+[8,"'Could this correlation be coincidental?' is a ___ question:",["Results","Methodology","Literature","Application"],0,"'What is the practical implication?' is Application."],
+[8,"The Technical question category:",["Validates that the statements you make are really stated in the paper","Asks about sample size","Asks about authors","Asks for recommendations"],0,"Technical."],
+[8,"When responding to a question, first:",["Interrupt","Pause: listen to the full question and take a breath","Answer immediately","Defend"],1,"The Pause."],
+[8,"If you don't know the answer:",["Bluff","Admit it, but offer a hypothesis on how you would find out","Change the subject","Argue"],1,"Objectivity."],
+[8,"The Inverted Pyramid approach:",["Rationale, then answer","Answer directly, then provide the rationale","Long story first","Question the panel"],1,"Structure."],
+[8,"If unsure what is being asked:",["Guess","Clarify, e.g., 'Are you asking about X or Y?'","Ignore it","Skip it"],1,"Clarify."],
+[8,"Handling criticism, you should:",["Take it personally","Stay calm, acknowledge ('That is a valid point/limitation'), then respond","Cross your arms","Argue"],1,"Treat criticism as academic inquiry; keep an open posture."],
+[8,"Communicating significance means:",["Listing results only","Explaining the impact (the 'So What?' Factor) and why the audience should care","Skipping implications","Reading the abstract"],1,"E.g., policy, scientific advancement, social impact."],
+[8,"The closing statement should be:",["Silence","A strong, memorable summary of your contribution to the field","A long apology","New data"],1,"Closing statement."],
+[8,"The final checklist includes:",["Readable visuals, time requirements met, rehearsed transitions, Q&A prepared, professional attire, you know your work","Only slide count","Only attire","Only references"],0,"Final checklist."],
+[8,"The key takeaway on Q&A:",["It is a personal interrogation","Treat it as an objective academic discussion, not a personal interrogation","Avoid questions","Always defend"],1,"Key takeaway."]
+];
+const L="ABCD",app=document.getElementById("app");
+let list,i,score,wrong,done;
+function start(f){list=Q.filter(q=>!f||q[0]===f);i=0;score=0;wrong=[];ask()}
+function home(){const ls=[...new Set(Q.map(q=>q[0]))];app.innerHTML='<div class="card"><p class="q">Choose what to practice.</p><div class="choices"><button class="primary" onclick="start(0)">All ('+Q.length+')</button>'+ls.map(l=>'<button class="primary" onclick="start('+l+')">Lesson '+l+' ('+Q.filter(q=>q[0]===l).length+')</button>').join("")+'</div></div>'}
+function ask(){
+ if(i>=list.length)return end();
+ const q=list[i];done=false;
+ app.innerHTML='<div class="meta"><span>Lesson '+q[0]+'</span><span>'+(i+1)+' of '+list.length+'</span></div><div class="bar"><i style="width:'+(i/list.length*100)+'%"></i></div><div class="card"><p class="q">'+q[1]+'</p><div id="o">'+q[2].map((t,k)=>'<button class="opt" onclick="pick('+k+')"><b>'+L[k]+'.</b> '+t+'</button>').join("")+'</div><div id="f"></div></div>';
+}
+function pick(k){
+ if(done)return;done=true;const q=list[i],ok=k===q[3];
+ if(ok)score++;else wrong.push(q);
+ [...document.querySelectorAll(".opt")].forEach((b,n)=>{b.disabled=true;if(n===q[3])b.classList.add("ok");else if(n===k)b.classList.add("no")});
+ document.getElementById("f").innerHTML='<div class="exp"><b>'+(ok?"Correct.":"Not quite.")+'</b> '+q[4]+'</div><button class="primary" onclick="i++;ask()">'+(i+1===list.length?"See results":"Next question")+'</button>';
+}
+function end(){
+ const p=Math.round(score/list.length*100);
+ app.innerHTML='<div class="card"><p class="score">'+score+' / '+list.length+'</p><p>'+p+'% correct.</p><div class="choices"><button class="primary" onclick="home()">Back to menu</button>'+(wrong.length?'<button class="primary" onclick="list=wrong;wrong=[];i=0;score=0;ask()">Retry '+wrong.length+' missed</button>':'')+'</div></div>'+(wrong.length?'<h2>Review missed items</h2>'+wrong.map(q=>'<div class="rev"><b>'+q[1]+'</b><br>Answer: '+q[2][q[3]]+'</div>').join(""):"");
+}
+home();
+</script>
+</body>
+</html>
